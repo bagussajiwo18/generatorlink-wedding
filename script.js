@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AE DICREAT - Wedding Invitation Link Generator Engine
+   BS DICREAT - Wedding Invitation Link Generator Engine
    ========================================================================== */
 
 // Application State
@@ -15,7 +15,7 @@ const SAMPLE_GUEST_NAMES = [
   "Andi & Sinta",
   "Keluarga Bapak Ahmad",
   "Ibu Siti",
-  "Rizky & Amanda",
+  "Rizky",
   "Budi Santoso", // Intentional duplicate to demonstrate numbering
   "Dr. Hendra Wijaya, Sp.PD",
   "Keluarga Besar Oetomo",
@@ -26,7 +26,18 @@ const SAMPLE_GUEST_NAMES = [
 // DOM Elements Initialization
 document.addEventListener("DOMContentLoaded", () => {
   initEventListeners();
-  loadSavedState();
+
+  // Clear inputs on refresh
+  const baseUrlInput = document.getElementById("base-url");
+  if (baseUrlInput) baseUrlInput.value = "";
+
+  const guestTextarea = document.getElementById("guest-names");
+  if (guestTextarea) guestTextarea.value = "";
+
+  // Remove saved state
+  localStorage.removeItem("aedicreat_wedding_state");
+
+  updateGuestCounter();
 });
 
 function initEventListeners() {
@@ -51,7 +62,7 @@ function initEventListeners() {
 function sanitizeBaseUrlInput() {
   const input = document.getElementById("base-url");
   if (!input) return "";
-  
+
   let val = input.value.trim();
   if (val.endsWith("/")) {
     val = val.slice(0, -1);
@@ -119,22 +130,22 @@ function loadSampleData() {
  */
 function createSlug(name) {
   if (!name) return "";
-  
+
   let slug = name.toLowerCase().trim();
-  
-  // Replace '&' with space then clean
-  slug = slug.replace(/&/g, " ");
-  
-  // Remove unwanted punctuation except letters, numbers, spaces, and hyphens
+
+  // Encode '&' as '%26' to preserve the symbol without breaking the URL query parameter
+  slug = slug.replace(/&/g, "%26");
+
+  // Remove unwanted punctuation except letters, numbers, spaces, hyphens, and % (for %26)
   // Keeps Indonesian characters intact
-  slug = slug.replace(/[^\w\s-]/gi, "");
-  
+  slug = slug.replace(/[^\w\s\-%]/gi, "");
+
   // Replace multiple spaces or underscores with a single hyphen
   slug = slug.replace(/[\s_]+/g, "-");
-  
+
   // Strip leading or trailing hyphens
   slug = slug.replace(/^-+|-+$/g, "");
-  
+
   return slug || "tamu-undangan";
 }
 
@@ -246,9 +257,9 @@ function renderResultsTable(filterQuery = "") {
 
   const query = filterQuery.toLowerCase().trim();
   const filtered = appState.generatedItems.filter(item => {
-    return item.rawName.toLowerCase().includes(query) || 
-           item.fullUrl.toLowerCase().includes(query) ||
-           item.slug.toLowerCase().includes(query);
+    return item.rawName.toLowerCase().includes(query) ||
+      item.fullUrl.toLowerCase().includes(query) ||
+      item.slug.toLowerCase().includes(query);
   });
 
   if (filtered.length === 0) {
@@ -394,7 +405,7 @@ function exportTXT() {
 
   const blob = new Blob(["\uFEFF" + txtContent], { type: "text/plain;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
-  
+
   const link = document.createElement("a");
   link.setAttribute("href", url);
   link.setAttribute("download", "Download.txt");
@@ -462,7 +473,7 @@ function showToast(message, type = "success") {
 
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
-  
+
   const icon = type === "success" ? "fa-circle-check" : "fa-triangle-exclamation";
   toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${escapeHtml(message)}</span>`;
 
@@ -496,7 +507,7 @@ function loadSavedState() {
       const parsed = JSON.parse(saved);
       if (parsed && Array.isArray(parsed.generatedItems) && parsed.generatedItems.length > 0) {
         appState = parsed;
-        
+
         const baseUrlInput = document.getElementById("base-url");
         if (baseUrlInput && appState.baseUrl) baseUrlInput.value = appState.baseUrl;
 
