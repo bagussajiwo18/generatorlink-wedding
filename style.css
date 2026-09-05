@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AE DICREAT - Wedding Invitation Link Generator Design System
+   BS DICREAT - Wedding Invitation Link Generator Design System
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
@@ -161,7 +161,7 @@ body {
 /* Cards & Layout */
 .grid-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
 }
 
@@ -172,6 +172,7 @@ body {
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   transition: var(--transition-normal);
+  min-width: 0;
 }
 
 .card-title {
