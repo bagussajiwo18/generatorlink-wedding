@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BS DICREAT - Wedding Invitation Link Generator</title>
+  <meta name="description"
+    content="Generate personalized wedding invitation links automatically for your guests with AE DICREAT.">
+  <link rel="stylesheet" href="style.css">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <span class="brand-badge">BS DICREAT</span>
+      <h1 class="main-title">Wedding Invitation Link Generator</h1>
+      <p class="site-subtitle">Buat tautan undangan yang dipersonalisasi untuk tamu pernikahan Anda secara otomatis.</p>
+      <div class="header-divider"></div>
+    </header>
+
+    <!-- MAIN GENERATOR VIEW -->
+    <main id="view-generator">
+      <div class="grid-layout">
+
+        <!-- Input Form Card -->
+        <section class="card">
+          <h2 class="card-title">
+            <span class="icon-box"><i class="fa-solid fa-sliders"></i></span>
+            Pengaturan & Input Data
+          </h2>
+
+          <!-- Section: Input URL Dasar -->
+          <div class="form-group">
+            <label for="base-url" class="form-label">
+              URL Dasar Undangan <span style="color: var(--error);">*</span>
+            </label>
+            <input type="url" id="base-url" class="input-text" placeholder="https://undangananda.com" value="" required>
+            <p class="input-help">Contoh: <code>https://undangananda.com</code> (Akhiran garis miring
+              <code>/</code> otomatis dihapus)
+            </p>
+          </div>
+
+          <!-- Section: Input Daftar Nama Tamu -->
+          <div class="form-group">
+            <label for="guest-names" class="form-label">
+              Daftar Nama Tamu (maks. 1000) <span style="color: var(--error);">*</span>
+            </label>
+
+            <textarea id="guest-names" class="textarea-custom"
+              placeholder="Budi Santoso&#10;Andi & Sinta&#10;Keluarga Bapak Ahmad&#10;Ibu Siti&#10;Rizky & Amanda"></textarea>
+
+            <div class="textarea-footer">
+              <span id="name-count-badge" class="guest-counter">0 / 1000 tamu</span>
+              <span id="name-error-msg" style="color: var(--error); font-weight: 600; display: none;">
+                Maksimal 1000 nama tamu.
+              </span>
+            </div>
+          </div>
+
+          <!-- Section: Tombol Generate Links -->
+          <button id="btn-generate" class="btn-primary" onclick="generateLinks()">
+            <i class="fa-solid fa-bolt"></i> Generate Links
+          </button>
+        </section>
+
+        <!-- Results Section Card -->
+        <section class="card" id="results-section" style="display: none;">
+          <h2 class="card-title">
+            <span class="icon-box"><i class="fa-solid fa-list-check"></i></span>
+            Hasil Generate Link Personal
+          </h2>
+
+          <!-- Statistics Counters -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="stat-total">0</div>
+              <div class="stat-label">Total Tamu</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-success">0</div>
+              <div class="stat-label">Link Berhasil</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-copied">0</div>
+              <div class="stat-label">Link Dicopy</div>
+            </div>
+          </div>
+
+          <!-- Results Toolbar -->
+          <div class="results-toolbar">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="search-input" class="input-text" placeholder="Cari nama atau link tamu..."
+                oninput="filterResults()">
+            </div>
+
+            <div class="toolbar-actions">
+              <button class="btn-secondary" id="btn-copy-all" onclick="copyAllLinks()">
+                <i class="fa-regular fa-copy"></i> Copy All
+              </button>
+              <button class="btn-secondary" onclick="exportTXT()">
+                <i class="fa-solid fa-file-lines"></i> Download .txt
+              </button>
+              <button class="btn-secondary btn-danger" onclick="openResetModal()">
+                <i class="fa-solid fa-trash-can"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Responsive Table -->
+          <div class="table-responsive">
+            <table class="links-table" id="links-table">
+              <thead>
+                <tr>
+                  <th class="col-no">No</th>
+                  <th class="col-name">Nama Tamu</th>
+                  <th class="col-link">Link Undangan</th>
+                  <th class="col-action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="links-table-body">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div id="no-search-results" class="empty-state" style="display: none;">
+            <i class="fa-solid fa-filter-circle-xmark empty-icon"></i>
+            <p>Tidak ada nama tamu yang cocok dengan pencarian.</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p>&copy; 2026 <strong>BS DICREAT</strong>. All Rights Reserved. Personalized Wedding Invitation Link Generator.
+      </p>
+    </footer>
+  </div>
+
+  <!-- Confirmation Reset Modal -->
+  <div id="reset-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="modal-header"><i class="fa-solid fa-triangle-exclamation" style="color: var(--warning);"></i>
+        Konfirmasi Reset Data</h3>
+      <p class="modal-body">Apakah Anda yakin ingin menghapus seluruh data nama tamu dan hasil link yang telah
+        di-generate?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeResetModal()">Batal</button>
+        <button class="btn-secondary btn-danger" onclick="confirmResetData()">Ya, Hapus Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
