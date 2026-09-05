@@ -196,7 +196,7 @@ function generateLinks() {
         slugMap.set(baseSlug, 1);
       }
 
-      const fullUrl = `${baseUrl}/${finalSlug}`;
+      const fullUrl = `${baseUrl}?to=${finalSlug}`;
 
       items.push({
         id: `item-${Date.now()}-${index}`,
