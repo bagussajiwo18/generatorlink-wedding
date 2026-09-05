@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BS DICREAT - Wedding Invitation Link Generator</title>
   <meta name="description"
-    content="Generate personalized wedding invitation links automatically for your guests with BS DICREAT Wedding.">
+    content="Generate personalized wedding invitation links automatically for your guests with AE DICREAT.">
   <link rel="stylesheet" href="style.css">
   <!-- FontAwesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -40,9 +40,7 @@
               URL Dasar Undangan <span style="color: var(--error);">*</span>
             </label>
             <input type="url" id="base-url" class="input-text" placeholder="https://undangananda.com" value="" required>
-            <p class="input-help">Contoh: <code>https://undangananda.com</code> (Akhiran garis miring
-              <code>/</code> otomatis dihapus)
-            </p>
+            <p class="input-help">Contoh: <code>https://undangananda.com</code></p>
           </div>
 
           <!-- Section: Input Daftar Nama Tamu -->
@@ -52,7 +50,7 @@
             </label>
 
             <textarea id="guest-names" class="textarea-custom"
-              placeholder="Budi Santoso&#10;Andi & Sinta&#10;Keluarga Bapak Ahmad&#10;Ibu Siti&#10;Rizky & Amanda"></textarea>
+              placeholder="Andi Kurniawan&#10;Andi & Sinta&#10;Keluarga Bapak Ahmad&#10;Ibu Siti&#10;Rizky"></textarea>
 
             <div class="textarea-footer">
               <span id="name-count-badge" class="guest-counter">0 / 1000 tamu</span>
@@ -75,21 +73,7 @@
             Hasil Generate Link Personal
           </h2>
 
-          <!-- Statistics Counters -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value" id="stat-total">0</div>
-              <div class="stat-label">Total Tamu</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="stat-success">0</div>
-              <div class="stat-label">Link Berhasil</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="stat-copied">0</div>
-              <div class="stat-label">Link Dicopy</div>
-            </div>
-          </div>
+
 
           <!-- Results Toolbar -->
           <div class="results-toolbar">
